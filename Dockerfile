@@ -34,6 +34,11 @@ RUN wget -q --no-cookies "https://github.com/Icinga/icingaweb2/archive/master.ta
 RUN wget -q --no-cookies "https://github.com/Icinga/icingaweb2-module-director/archive/master.tar.gz" -O - | tar xz --strip-components=1 --directory=/etc/icingaweb2/modules/director --exclude=.gitignore -f -
 
 
+# patch debian zendframework
+# see: https://github.com/Icinga/icingaweb2-module-director/blob/master/doc/80-FAQ.md#binary-data-corruption-with-zf-1126-and-11217
+
+RUN sed -i 's|\(\$value = addcslashes(\$value, "\\000\\032");\)|//\1|' /usr/share/php/Zend/Db/Adapter/Pdo/Abstract.php
+
 EXPOSE 80 443 5665
 
 VOLUME  ["/etc/icinga2", "/etc/icinga-web", "/etc/icingaweb2", "/var/lib/mysql", "/var/lib/icinga2", "/etc/ssmtp"]
