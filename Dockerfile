@@ -28,17 +28,11 @@ RUN chmod u+x /opt/run
 
 # Temporary hack to get icingaweb2 modules via git
 RUN mkdir -p /etc/icingaweb2/enabledModules
-RUN wget --no-cookies "https://github.com/Icinga/icingaweb2/archive/master.zip" -O /tmp/icingaweb2.zip
-RUN unzip /tmp/icingaweb2.zip "icingaweb2-master/modules/doc/*" "icingaweb2-master/modules/monitoring/*" -d "/tmp/icingaweb2"
-RUN cp -R /tmp/icingaweb2/icingaweb2-master/modules/monitoring /etc/icingaweb2/modules/
-RUN cp -R  /tmp/icingaweb2/icingaweb2-master/modules/doc /etc/icingaweb2/modules/
-RUN rm -rf /tmp/icingaweb2.zip /tmp/icingaweb2
+RUN wget -q --no-cookies "https://github.com/Icinga/icingaweb2/archive/master.tar.gz" -O - | tar xz --strip-components=2 --directory=/etc/icingaweb2/modules -f - icingaweb2-master/modules/monitoring icingaweb2-master/modules/doc
 
 # Icinga Director
-RUN wget --no-cookies "https://github.com/Icinga/icingaweb2-module-director/archive/master.zip" -O /tmp/director.zip
-RUN unzip /tmp/director.zip -d "/tmp/director"
-RUN cp -R /tmp/director/icingaweb2-module-director-master/* /etc/icingaweb2/modules/director/
-RUN rm -rf /tmp/director
+RUN wget -q --no-cookies "https://github.com/Icinga/icingaweb2-module-director/archive/master.tar.gz" -O - | tar xz --strip-components=1 --directory=/etc/icingaweb2/modules/director --exclude=.gitignore -f -
+
 
 EXPOSE 80 443 5665
 
